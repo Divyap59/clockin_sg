@@ -1,3 +1,5 @@
+import 'package:clockin_sg/confirmation_yes.dart';
+import 'package:clockin_sg/histroy_sceen.dart';
 import 'package:clockin_sg/home/home.dart';
 import 'package:clockin_sg/profile/profile_edit.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +13,11 @@ class TabScreen extends StatefulWidget {
 
 class _TabScreenState extends State<TabScreen> {
   PageController _myPage = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         highlightElevation: 10,
         elevation: 0,
@@ -109,7 +113,8 @@ class _TabScreenState extends State<TabScreen> {
         },
         children: <Widget>[
           HomeScreen(),
-          ProfileEditScreen(),
+          HistroyScreen(),
+          //ConfirmatonScreen()
         ],
         physics:
             NeverScrollableScrollPhysics(), // Comment this if you need to use Swipe.

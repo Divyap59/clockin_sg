@@ -1,11 +1,16 @@
+import 'package:clockin_sg/camera_screen.dart';
+import 'package:clockin_sg/confirmation_yes.dart';
+import 'package:clockin_sg/histroy_sceen.dart';
 import 'package:clockin_sg/home/home.dart';
 import 'package:clockin_sg/login_resetpass_otp/reset_pasword.dart';
+import 'package:clockin_sg/qr_scan.dart';
 import 'package:clockin_sg/tab_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_toastr/flutter_toastr.dart';
 import 'package:google_fonts/google_fonts.dart';
+//import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -179,8 +184,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               Color.fromRGBO(255, 197, 15, 1)),
                         ),
                         onPressed: () {
-                          Navigator.push(context,
-                              CupertinoPageRoute(builder: (_) => TabScreen()));
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (_) => CameraScreen()));
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.045,

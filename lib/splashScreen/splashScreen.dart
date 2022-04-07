@@ -1,8 +1,7 @@
 import 'dart:async';
-import 'dart:io';
+
 import 'package:clockin_sg/login_resetpass_otp/loginScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -38,19 +37,20 @@ class _SplashState extends State<Splash> {
     var mediaQuery = MediaQuery.of(context);
 
     return SafeArea(
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.zero,
-            width: mediaQuery.size.width,
-            height: mediaQuery.size.height,
-            //color: whiteColor,
-            child: Image.asset(
-              'lib/assets/Splash.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-        ],
+      child: Container(
+        width: mediaQuery.size.width,
+        height: mediaQuery.size.height,
+        //color: Colors.red,
+        child: Image.asset(
+          'lib/assets/Splash.png',
+          //width: mediaQuery.size.width,
+          fit: BoxFit.cover,
+        ),
+
+        // child: Image.asset(
+        //   'lib/assets/Splash.png',
+        //   fit: BoxFit.fitHeight,
+        // ),
       ),
     );
   }

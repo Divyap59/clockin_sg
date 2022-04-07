@@ -9,8 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 
-import '../comman_var/variables.dart';
-
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({Key? key}) : super(key: key);
 
@@ -166,9 +164,9 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                 ),
                 textAlign: TextAlign.center),
             centerTitle: true,
-            actions: [
-              IconButton(icon: Icon(Icons.cancel_sharp), onPressed: () {}),
-            ],
+            // actions: [
+            //   IconButton(icon: Icon(Icons.cancel_sharp), onPressed: () {}),
+            // ],
           ),
           body: SafeArea(
             child: SingleChildScrollView(

@@ -1,4 +1,8 @@
 import 'package:clockin_sg/provider.dart';
+import 'package:clockin_sg/qr_scan.dart';
+import 'package:clockin_sg/tab_controller.dart';
+import 'package:clockin_sg/text_slide.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
@@ -28,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
     'clockin3.sg',
     'clockin4.sg',
     'clockin5.sg',
-    ''
   ];
 
   List<String> iconText = [
@@ -85,6 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+
           // floatingActionButton: FloatingActionButton.extended(
           //     icon: Icon(Icons.camera_alt),
           //     onPressed: () {
@@ -98,122 +102,323 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.white,
           appBar: AppBar(
             elevation: 0,
-            leading: GestureDetector(
-              onTap: (() {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => _buildPopupDialog(context),
-                );
-              }),
-              child: Image.asset('lib/assets/Vector-2.png'),
-            ),
+            automaticallyImplyLeading: false,
+            // GestureDetector(
+            //   onTap: (() {
+            //     showDialog(
+            //       context: context,
+            //       builder: (BuildContext context) => _buildPopupDialog(context),
+            //     );
+            //   }),
+            //   child: Image.asset('lib/assets/Vector-2.png'),
+            // ),
             backgroundColor: Color.fromRGBO(255, 197, 15, 1),
-            title: Text('Home'),
-            centerTitle: true,
-          ),
-          body: SafeArea(
-            child: Stack(
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.06,
-                  color: Color.fromRGBO(255, 197, 15, 1),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
-                  child: Container(
-                      margin:
-                          EdgeInsets.only(left: 0, top: 6, right: 0, bottom: 0),
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(20.0),
-                            topRight: const Radius.circular(20.0),
-                          )),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                DropdownButton<String>(
-                                  //isExpanded: true,
-                                  value: dropdownValue,
-                                  icon: const Icon(Icons.arrow_drop_down),
-                                  iconSize: 24,
-                                  elevation: 0,
-                                  //hint: Text("Select Company"),
-                                  style: const TextStyle(
-                                      color: Colors.black, fontSize: 20),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      dropdownValue = newValue!;
-                                      // iconTextindex ==
-                                      //     _locations.indexOf(newValue);
-                                      print(_locations.indexOf(newValue));
-                                    });
-                                  },
-                                  items: _locations.map((location) {
-                                    return DropdownMenuItem(
-                                      child: new Text(location),
-                                      value: location,
-                                    );
-                                  }).toList(),
-                                ),
-                                Container(
-                                  height: 50,
-                                  width: 80,
-                                  child:
-                                      // Row(
-                                      //     children: iconText
-                                      //         .map((item) => new Text(item))
-                                      //         .toList()),
-                                      Image.asset('lib/assets/Vector.png'),
-                                )
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                      // Column(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   children: [
-                      //     Center(
-                      //         child: Container(
-                      //       height: MediaQuery.of(context).size.height * 0.3,
-                      //       width: MediaQuery.of(context).size.width * 0.5,
-                      //       decoration: BoxDecoration(
-                      //           shape: BoxShape.circle,
-                      //           color: Color.fromRGBO(255, 197, 15, 1)),
-                      //       child: Padding(
-                      //         padding: const EdgeInsets.all(2.5),
-                      //         // child: Image.file(counter.imageFile == null
-                      //         //     ? Image.asset('name')
-                      //         //     : counter.imageFile)
-                      //       ),
-                      //     )),
-                      //     //SizedBox(height: MediaQuery.of(context).size.height * 0.04),
-                      //     Text(
-                      //       'WelCome to\n' + counter.userName,
-                      //       style: GoogleFonts.alef(
-                      //         fontWeight: FontWeight.w400,
-                      //         fontSize: 18,
-                      //       ),
-                      //       textAlign: TextAlign.center,
-                      //     ),
-
-                      //     //
-                      //   ],
-                      // ),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: Container(
+                      height: 25,
+                      width: 35,
+                      child: Image.asset(
+                        'lib/assets/Vector.png',
+                        color: Color.fromRGBO(255, 197, 15, 1),
                       ),
-                )
+                    ),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  height: MediaQuery.of(context).size.height * 0.04,
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  decoration: BoxDecoration(
+                      // border: Border.all(color: Colors.white, width: 1),
+                      // borderRadius: BorderRadius.circular(16)
+                      ),
+                  child: DropdownButton<String>(
+                    dropdownColor: Colors.black.withOpacity(0.5),
+                    //isExpanded: true,
+                    value: dropdownValue,
+                    icon: const Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.white,
+                    ),
+                    iconSize: 24,
+                    elevation: 0,
+                    //hint: Text("Select Company"),
+                    style: const TextStyle(color: Colors.white, fontSize: 18),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownValue = newValue!;
+                        print(_locations.indexOf(newValue));
+                      });
+                    },
+                    items: _locations.map((location) {
+                      return DropdownMenuItem(
+                        child: new Text(
+                          location,
+                          //style: TextStyle(color: Colors.red),
+                        ),
+                        value: location,
+                      );
+                    }).toList(),
+                  ),
+                ),
               ],
             ),
-          )),
+            //centerTitle: true,
+          ),
+          body: SafeArea(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              color: Color(0xE5E5E5),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 40,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(context,
+                              CupertinoPageRoute(builder: (_) => TabScreen()));
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: MediaQuery.of(context).size.height * 0.08,
+                          width: MediaQuery.of(context).size.width * 0.25,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                                  width: 1),
+                              borderRadius: BorderRadius.circular(16)),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.lock_clock_rounded),
+                              SizedBox(
+                                height: 3,
+                              ),
+                              Text('clockIn',
+                                  style: GoogleFonts.arimo(
+                                      //fontSize: 15,
+                                      color: Colors.black))
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        height: MediaQuery.of(context).size.height * 0.08,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Color.fromRGBO(0, 0, 0, 0.25), width: 1),
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.lock_clock_rounded),
+                            SizedBox(
+                              height: 3,
+                            ),
+                            Text('clockOut',
+                                style: GoogleFonts.arimo(
+                                    //fontSize: 15,
+                                    color: Colors.black))
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.04,
+                  ),
+                  Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Color.fromRGBO(0, 0, 0, 0.25), width: 1),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: SliderItem()),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.04,
+                  ),
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Recent Clock Ins',
+                        style: GoogleFonts.arimo(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 18,
+                            color: Colors.black),
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.03,
+                  ),
+                  Container(
+                      alignment: Alignment.centerLeft,
+                      height: MediaQuery.of(context).size.height * 0.12,
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Color.fromRGBO(0, 0, 0, 0.25), width: 1),
+                          borderRadius: BorderRadius.circular(16)),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('City Name',
+                                style: GoogleFonts.arimo(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 15,
+                                    color: Colors.black)),
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.005,
+                            ),
+                            Text('IN: ' + '30 March ' + '09:00AM',
+                                style: GoogleFonts.arimo(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 15,
+                                    color: Colors.black)),
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.005,
+                            ),
+                            Text('OUT: ' + '30 March ' + '06:00PM',
+                                style: GoogleFonts.arimo(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 15,
+                                    color: Colors.black)),
+                          ],
+                        ),
+                      )),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.03,
+                  ),
+                ],
+              ),
+            ),
+          )
+
+              // Stack(
+              //   children: [
+              //     Container(
+              //       width: MediaQuery.of(context).size.width,
+              //       height: MediaQuery.of(context).size.height * 0.06,
+              //       color: Color.fromRGBO(255, 197, 15, 1),
+              //     ),
+              //     Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 30),
+              //       child: Container(
+              //           margin:
+              //               EdgeInsets.only(left: 0, top: 6, right: 0, bottom: 0),
+              //           height: MediaQuery.of(context).size.height,
+              //           width: MediaQuery.of(context).size.width,
+              //           decoration: BoxDecoration(
+              //               color: Colors.white,
+              //               borderRadius: new BorderRadius.only(
+              //                 topLeft: const Radius.circular(20.0),
+              //                 topRight: const Radius.circular(20.0),
+              //               )),
+              //           child: Column(
+              //             children: [
+              //               Padding(
+              //                 padding: const EdgeInsets.symmetric(
+              //                     horizontal: 20, vertical: 20),
+              //                 child: Row(
+              //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //                   children: [
+              //                     DropdownButton<String>(
+              //                       //isExpanded: true,
+              //                       value: dropdownValue,
+              //                       icon: const Icon(Icons.arrow_drop_down),
+              //                       iconSize: 24,
+              //                       elevation: 0,
+              //                       //hint: Text("Select Company"),
+              //                       style: const TextStyle(
+              //                           color: Colors.black, fontSize: 20),
+              //                       onChanged: (String? newValue) {
+              //                         setState(() {
+              //                           dropdownValue = newValue!;
+              //                           // iconTextindex ==
+              //                           //     _locations.indexOf(newValue);
+              //                           print(_locations.indexOf(newValue));
+              //                         });
+              //                       },
+              //                       items: _locations.map((location) {
+              //                         return DropdownMenuItem(
+              //                           child: new Text(location),
+              //                           value: location,
+              //                         );
+              //                       }).toList(),
+              //                     ),
+              //                     Container(
+              //                       height: 50,
+              //                       width: 80,
+              //                       child:
+              //                           // Row(
+              //                           //     children: iconText
+              //                           //         .map((item) => new Text(item))
+              //                           //         .toList()),
+              //                           Image.asset('lib/assets/Vector.png'),
+              //                     )
+              //                   ],
+              //                 ),
+              //               ),
+              //             ],
+              //           )
+              //           // Column(
+              //           //   mainAxisAlignment: MainAxisAlignment.center,
+              //           //   children: [
+              //           //     Center(
+              //           //         child: Container(
+              //           //       height: MediaQuery.of(context).size.height * 0.3,
+              //           //       width: MediaQuery.of(context).size.width * 0.5,
+              //           //       decoration: BoxDecoration(
+              //           //           shape: BoxShape.circle,
+              //           //           color: Color.fromRGBO(255, 197, 15, 1)),
+              //           //       child: Padding(
+              //           //         padding: const EdgeInsets.all(2.5),
+              //           //         // child: Image.file(counter.imageFile == null
+              //           //         //     ? Image.asset('name')
+              //           //         //     : counter.imageFile)
+              //           //       ),
+              //           //     )),
+              //           //     //SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+              //           //     Text(
+              //           //       'WelCome to\n' + counter.userName,
+              //           //       style: GoogleFonts.alef(
+              //           //         fontWeight: FontWeight.w400,
+              //           //         fontSize: 18,
+              //           //       ),
+              //           //       textAlign: TextAlign.center,
+              //           //     ),
+
+              //           //     //
+              //           //   ],
+              //           // ),
+              //           ),
+              //     )
+              //   ],
+              // ),
+              )),
     );
   }
 }
