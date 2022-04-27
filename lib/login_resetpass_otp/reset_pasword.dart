@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../constent.dart';
+
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({Key? key}) : super(key: key);
 
@@ -12,11 +14,6 @@ class ResetPasswordScreen extends StatefulWidget {
 }
 
 class _ResetPasswordScreenScreenState extends State<ResetPasswordScreen> {
-  // List countryData = ["1", '2', '3', '4', '5'];
-  // String dropdownValue = 'One';
-  //final GlobalKey<FormState> _formKey = GlobalKey();
-  TextEditingController resetPasswodController = TextEditingController();
-  //TextEditingController enterMobileNumberController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return WillPopScope(

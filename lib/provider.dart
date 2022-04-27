@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class Counter extends ChangeNotifier {
   File? imageFile;
@@ -13,7 +11,7 @@ class Counter extends ChangeNotifier {
     return userName;
   }
 
-  void incrementCounter(
+  void editProfileData(
       File? images, String name, String cuntryCode, String mobileNum) {
     imageFile = images;
     userName = name;

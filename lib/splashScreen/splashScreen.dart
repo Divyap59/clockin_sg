@@ -36,21 +36,24 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
 
-    return SafeArea(
-      child: Container(
+    return Scaffold(
+      body:
+          // Container(     https://picsum.photos/id/237/200/300
+          //   constraints: BoxConstraints.expand(),
+          //   decoration: const BoxDecoration(
+          //     image: DecorationImage(
+          //         image: AssetImage("lib/assets/Splash.png"), fit: BoxFit.cover),
+          //   ),
+
+          Container(
         width: mediaQuery.size.width,
         height: mediaQuery.size.height,
-        //color: Colors.red,
+        color: Colors.red,
         child: Image.asset(
-          'lib/assets/Splash.png',
-          //width: mediaQuery.size.width,
+          "lib/assets/image 12.png",
+          width: mediaQuery.size.width,
           fit: BoxFit.cover,
         ),
-
-        // child: Image.asset(
-        //   'lib/assets/Splash.png',
-        //   fit: BoxFit.fitHeight,
-        // ),
       ),
     );
   }

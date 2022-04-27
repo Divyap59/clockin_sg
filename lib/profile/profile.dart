@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../login_resetpass_otp/loginScreen.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
 
@@ -39,7 +41,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         elevation: 0,
         leading: GestureDetector(
-          onTap: (() {}),
+          onTap: (() {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) {
+                  return LoginScreen();
+                },
+              ),
+            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => LoginScreen()),
+            // );
+          }),
           child: Icon(Icons.arrow_back_ios),
         ),
         backgroundColor: Color.fromRGBO(255, 197, 15, 1),
@@ -93,7 +107,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(2.0),
-                                    child: Image.file(
+                                    child:
+                                        // Image.file == null
+                                        //     ? Image.file(
+                                        //         counter.imageFile!,
+                                        //         fit: BoxFit.cover,
+                                        //       )
+                                        //     : Center(
+                                        //         child: Text('select pic'),
+                                        //       )
+                                        Image.file(
                                       counter.imageFile!,
                                       fit: BoxFit.fill,
                                     ),

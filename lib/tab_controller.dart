@@ -112,8 +112,9 @@ class _TabScreenState extends State<TabScreen> {
           print('Page Changes to index $int');
         },
         children: <Widget>[
-          HomeScreen(),
-          HistroyScreen(),
+          //HomeScreen(),
+          ProfileEditScreen()
+          //HistroyScreen(),
           //ConfirmatonScreen()
         ],
         physics:

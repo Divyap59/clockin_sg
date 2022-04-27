@@ -1,13 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:typed_data';
+import 'package:clockin_sg/login_resetpass_otp/loginScreen.dart';
+import 'package:clockin_sg/profile/profile.dart';
 import 'package:clockin_sg/provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
+
+import '../constent.dart';
 
 class ProfileEditScreen extends StatefulWidget {
   const ProfileEditScreen({Key? key}) : super(key: key);
@@ -17,24 +22,20 @@ class ProfileEditScreen extends StatefulWidget {
 }
 
 class _ProfileEditScreenState extends State<ProfileEditScreen> {
-  TextEditingController enterNameController = TextEditingController();
-  TextEditingController enterCountryCodeController = TextEditingController();
-  TextEditingController enterMobileNumberController = TextEditingController();
-
   File? imageFile;
 
   void _openCamera(BuildContext context, ImageSource imageType) async {
-    try {
-      final photo = await ImagePicker().pickImage(source: imageType);
-      if (photo == null) return;
-      final tempImage = File(photo.path);
-      print(tempImage);
-      setState(() {
-        imageFile = tempImage;
-      });
-    } catch (error) {
-      debugPrint(error.toString());
-    }
+    //try {
+    //   final photo = await ImagePicker().pickImage(source: imageType);
+    //   if (photo == null) return;
+    //   final tempImage = File(photo.path);
+    //   print(tempImage);
+    //   setState(() {
+    //     imageFile = tempImage;
+    //   });
+    // } catch (error) {
+    //   debugPrint(error.toString());
+   // }
 
     // final pickedFile = await ImagePicker().getImage(
     //   source: imageType,
@@ -113,27 +114,63 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     enterCountryCodeController,
     enterMobileNumberController,
   ) {
-    Provider.of<Counter>(context, listen: false).incrementCounter(
+    Provider.of<Counter>(context, listen: false).editProfileData(
         image,
         enterNameController.toString(),
         enterCountryCodeController.toString(),
         enterMobileNumberController.toString());
   }
 
-  saveNameNumber() async {
+  save_Name_Number_image() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('userName', enterNameController.text);
+    prefs.setString('countryCode', selectCountryCodeController.text);
     prefs.setString('userMobileNum', enterMobileNumberController.text);
-    prefs.setString('usesrImage', imageFile!.path);
+    // String imageFileEncode = base64Encode(imageFile!.readAsBytesSync());
+    // return prefs.setString("usesrImage", imageFileEncode);
+    //prefs.setString('usesrImage', imageFile!.path);
   }
 
-  getStringValuesSF() async {
+  get_User_Name() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     //Return String
-    String? stringValue = prefs.getString('userName');
-    return stringValue;
+    String? userName = prefs.getString('userName');
+    setState(() {
+      //enterNameController.text = userName!;
+    });
+    get_country_code();
+    return userName;
   }
 
+  get_country_code() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+    String? countryCode = prefs.getString('countryCode');
+    setState(() {
+      //enterCountryCodeController.text = countryCode!;
+    });
+    return countryCode;
+  }
+
+  get_mobile_number() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //Return String
+    String? userMobileNum = prefs.getString('userMobileNum');
+    setState(() {
+      //enterMobileNumberController.text = userMobileNum!;
+    });
+    return userMobileNum;
+  }
+
+  get_image() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? usesrImage = prefs.getString('usesrImage');
+    setState(() {
+      imageFile = usesrImage! as File?;
+    });
+    return usesrImage;
+  }
   // @override
   // void initState() {
   //   // TODO: implement initState
@@ -143,7 +180,11 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //var counter = Provider.of<Counter>(context).getCounter;
+    Counter counter = Provider.of<Counter>(context);
+    get_User_Name();
+    // get_country_code();
+    // get_image();
+    // get_mobile_number();
     return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
@@ -151,7 +192,10 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
           appBar: AppBar(
             elevation: 0,
             leading: GestureDetector(
-              onTap: (() {}),
+              onTap: (() {
+                Navigator.push(context,
+                    CupertinoPageRoute(builder: (_) => ProfileScreen()));
+              }),
               child: Image.asset('lib/assets/Vector-2.png'),
             ),
             backgroundColor: Color.fromRGBO(255, 197, 15, 1),
@@ -215,7 +259,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                     fit: BoxFit.cover,
                                                   )
                                                 : Center(
-                                                    child: Text('select pic'),
+                                                    child: Text('Select pic'),
                                                   )))),
                               )),
                               SizedBox(
@@ -227,24 +271,32 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                 child: Column(
                                   children: [
                                     TextFormField(
-                                        keyboardType: TextInputType.number,
+                                        // onFieldSubmitted: (value) {
+                                        //   enterNameController.text.isEmpty
+                                        //       ? counter.userName
+                                        //       : enterNameController;
+                                        // },
+                                        keyboardType: TextInputType.name,
                                         controller: enterNameController,
                                         decoration: InputDecoration(
-                                          prefixIcon: Icon(Icons.person),
+                                          prefixIcon: Icon(Icons.person,
+                                              color: Color.fromRGBO(
+                                                  255, 197, 15, 1)),
 
                                           hintText: "Enter Name",
                                           hintStyle: TextStyle(
                                               color:
                                                   Colors.black.withOpacity(.4)),
                                           //When the TextFormField is NOT on focus
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.black),
-                                          ),
+                                          // enabledBorder: UnderlineInputBorder(
+                                          //   borderSide:
+                                          //       BorderSide(color: Colors.black),
+                                          // ),
                                           //When the TextFormField is ON focus
                                           focusedBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.teal),
+                                            borderSide: BorderSide(
+                                                color: Color.fromRGBO(
+                                                    255, 197, 15, 1)),
                                           ),
                                         )),
                                     SizedBox(
@@ -253,24 +305,27 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                                 0.04),
                                     TextFormField(
                                         keyboardType: TextInputType.number,
-                                        controller: enterCountryCodeController,
+                                        controller: selectCountryCodeController,
                                         decoration: InputDecoration(
-                                          prefixIcon:
-                                              Icon(Icons.wordpress_outlined),
+                                          prefixIcon: Icon(
+                                              Icons.wordpress_outlined,
+                                              color: Color.fromRGBO(
+                                                  255, 197, 15, 1)),
 
                                           hintText: "Country Code",
                                           hintStyle: TextStyle(
                                               color:
                                                   Colors.black.withOpacity(.4)),
                                           //When the TextFormField is NOT on focus
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.black),
-                                          ),
+                                          // enabledBorder: UnderlineInputBorder(
+                                          //   borderSide:
+                                          //       BorderSide(color: Colors.black),
+                                          // ),
                                           //When the TextFormField is ON focus
                                           focusedBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.teal),
+                                            borderSide: BorderSide(
+                                                color: Color.fromRGBO(
+                                                    255, 197, 15, 1)),
                                           ),
                                         )),
                                     SizedBox(
@@ -281,22 +336,25 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                         keyboardType: TextInputType.number,
                                         controller: enterMobileNumberController,
                                         decoration: InputDecoration(
-                                          prefixIcon:
-                                              Icon(Icons.wordpress_outlined),
+                                          prefixIcon: Icon(
+                                              Icons.wordpress_outlined,
+                                              color: Color.fromRGBO(
+                                                  255, 197, 15, 1)),
 
                                           hintText: "Mobile Number",
                                           hintStyle: TextStyle(
                                               color:
                                                   Colors.black.withOpacity(.4)),
                                           //When the TextFormField is NOT on focus
-                                          enabledBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.black),
-                                          ),
+                                          // enabledBorder: UnderlineInputBorder(
+                                          //   borderSide:
+                                          //       BorderSide(color: Colors.black),
+                                          // ),
                                           //When the TextFormField is ON focus
                                           focusedBorder: UnderlineInputBorder(
-                                            borderSide:
-                                                BorderSide(color: Colors.teal),
+                                            borderSide: BorderSide(
+                                                color: Color.fromRGBO(
+                                                    255, 197, 15, 1)),
                                           ),
                                         )),
                                   ],
@@ -315,17 +373,20 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                                             Color.fromRGBO(255, 197, 15, 1)),
                                   ),
                                   onPressed: (() {
-                                    saveNameNumber();
+                                    save_Name_Number_image();
                                     Provider.of<Counter>(context, listen: false)
-                                        .incrementCounter(
+                                        .editProfileData(
                                             imageFile,
                                             enterNameController.text.toString(),
-                                            enterCountryCodeController.text
+                                            selectCountryCodeController.text
                                                 .toString(),
                                             enterMobileNumberController.text
                                                 .toString());
-                                    ;
-                                    setState(() {});
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => LoginScreen()),
+                                    // );
                                   }),
                                   child: Container(
                                     height: MediaQuery.of(context).size.height *

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:clockin_sg/camera_screen.dart';
 import 'package:clockin_sg/confirmation_yes.dart';
 import 'package:clockin_sg/histroy_sceen.dart';
 import 'package:clockin_sg/home/home.dart';
 import 'package:clockin_sg/login_resetpass_otp/reset_pasword.dart';
+import 'package:clockin_sg/profile/profile_edit.dart';
 import 'package:clockin_sg/qr_scan.dart';
 import 'package:clockin_sg/tab_controller.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +13,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
 import 'package:flutter_toastr/flutter_toastr.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../comman_functiom/container_clock_in.dart';
+import '../constent.dart';
+import '../main.dart';
+import '../profile/profile.dart';
+import '../provider.dart';
 //import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -20,12 +30,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String dropdownValue = '';
+  final GlobalKey<FormState> _fromkey = GlobalKey<FormState>();
+
   List<String> _locations = ['', '+65', '+91', '+71', '+32']; // Option 2
   //String _selectedLocation;
   //final GlobalKey<FormState> _formKey = GlobalKey();
-  TextEditingController selectCountryCodeController = TextEditingController();
-  TextEditingController enterMobileNumberController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,10 +88,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
-                            child: TextFormField(
-                                controller: selectCountryCodeController,
-                                decoration: InputDecoration(
-                                  prefixIcon: DropdownButton<String>(
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      //top: BorderSide(width: 16.0, color: Colors.lightBlue.shade600),
+                                      bottom: BorderSide(
+                                          width: 0.8,
+                                          color: Colors.black.withOpacity(0.4)),
+                                    ),
+                                  ),
+                                  alignment: Alignment.centerLeft,
+                                  child: DropdownButton<String>(
+                                    underline:
+                                        Container(color: Colors.transparent),
                                     value: dropdownValue,
                                     icon: const Icon(Icons.arrow_drop_down),
                                     iconSize: 24,
@@ -103,19 +124,67 @@ class _LoginScreenState extends State<LoginScreen> {
                                       );
                                     }).toList(),
                                   ),
+                                ),
+                                // TextFormField(
+                                //     validator: (value) {
+                                //       if (value!.isEmpty) {
+                                //         return 'Code is Required';
+                                //       }
+                                //     },
+                                //     controller: selectCountryCodeController,
+                                //     onSaved: (value) {
+                                //       selectCountryCodeController =
+                                //           value! as TextEditingController;
+                                //     },
+                                //     // onChanged: (val) {
+                                //     //   setState(() {
+                                //     //     selectCountryCodeController =
+                                //     //         val as TextEditingController;
+                                //     //   });
+                                //     // },
+                                //     decoration: InputDecoration(
+                                //       prefixIcon:
 
-                                  hintText: " Select Country Code",
-                                  hintStyle: TextStyle(
-                                      color: Colors.black.withOpacity(.4)),
-                                  //When the TextFormField is NOT on focus
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
-                                  ),
-                                  //When the TextFormField is ON focus
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.teal),
-                                  ),
-                                )),
+                                //       DropdownButton<String>(
+                                //         value: dropdownValue,
+                                //         icon: const Icon(Icons.arrow_drop_down),
+                                //         iconSize: 24,
+                                //         elevation: 0,
+                                //         style: const TextStyle(
+                                //             color: Colors.black),
+                                //         // underline: Container(
+                                //         //   height: 2,
+                                //         //   color: Colors.deepPurpleAccent,
+                                //         // ),
+                                //         onChanged: (String? newValue) {
+                                //           setState(() {
+                                //             dropdownValue = newValue!;
+                                //           });
+                                //         },
+                                //         items: _locations.map((location) {
+                                //           return DropdownMenuItem(
+                                //             child: new Text(location),
+                                //             value: location,
+                                //           );
+                                //         }).toList(),
+                                //       ),
+
+                                //       hintText: " Select Country Code",
+                                //       hintStyle: TextStyle(
+                                //           color: Colors.black.withOpacity(.4)),
+                                //       //When the TextFormField is NOT on focus
+                                //       enabledBorder: UnderlineInputBorder(
+                                //         borderSide:
+                                //             BorderSide(color: Colors.black),
+                                //       ),
+                                //       //When the TextFormField is ON focus
+                                //       focusedBorder: UnderlineInputBorder(
+                                //         borderSide:
+                                //             BorderSide(color: Colors.teal),
+                                //       ),
+                                //     )),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -126,6 +195,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 35),
                       child: TextFormField(
                           keyboardType: TextInputType.number,
+                          onChanged: (val) {
+                            setState(() {
+                              enterMobileNumberController =
+                                  val as TextEditingController;
+                            });
+                          },
                           controller: enterMobileNumberController,
                           decoration: InputDecoration(
                             prefixIcon: Icon(Icons.mobile_off_rounded),
@@ -134,9 +209,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             hintStyle:
                                 TextStyle(color: Colors.black.withOpacity(.4)),
                             //When the TextFormField is NOT on focus
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
-                            ),
+                            // enabledBorder: UnderlineInputBorder(
+                            //   borderSide: BorderSide(color: Colors.black),
+                            // ),
                             //When the TextFormField is ON focus
                             focusedBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.teal),
@@ -184,10 +259,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               Color.fromRGBO(255, 197, 15, 1)),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                  builder: (_) => CameraScreen()));
+                          File? imageFile;
+                          Provider.of<Counter>(context, listen: false)
+                              .editProfileData(
+                                  imageFile,
+                                  enterNameController.text.toString(),
+                                  selectCountryCodeController.text.toString(),
+                                  enterMobileNumberController.text.toString());
+                          Navigator.push(context,
+                              CupertinoPageRoute(builder: (_) => TabScreen()));
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.045,
